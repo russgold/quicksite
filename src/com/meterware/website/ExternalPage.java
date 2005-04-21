@@ -2,7 +2,7 @@ package com.meterware.website;
 /********************************************************************************************************************
  * $Id$
  *
- * Copyright (c) 2003, Russell Gold
+ * Copyright (c) 2003,2005, Russell Gold
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
  * documentation files (the "Software"), to deal in the Software without restriction, including without limitation
@@ -19,24 +19,15 @@ package com.meterware.website;
  * DEALINGS IN THE SOFTWARE.
  *
  *******************************************************************************************************************/
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
-import java.text.ParseException;
-import java.beans.IntrospectionException;
-import java.lang.reflect.InvocationTargetException;
-
-import com.meterware.website.MenuTarget;
-import com.meterware.website.SiteTemplate;
 
 /**
  *
- * @author <a href="mailto:russgold@httpunit.org">Russell Gold</a>
+ * @author <a href="mailto:russgold@meterware.com">Russell Gold</a>
  **/
-class ExternalPage extends MenuTarget {
+public class ExternalPage extends MenuTarget {
 
-    public void generatePage( SiteTemplate template ) {
+    public void generate( PageGenerator generator, SiteTemplate template, Site site ) {
     }
 
 

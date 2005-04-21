@@ -2,7 +2,7 @@ package com.meterware.website;
 /********************************************************************************************************************
  * $Id$
  *
- * Copyright (c) 2003,2005, Russell Gold
+ * Copyright (c) 2005, Russell Gold
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
  * documentation files (the "Software"), to deal in the Software without restriction, including without limitation
@@ -19,36 +19,30 @@ package com.meterware.website;
  * DEALINGS IN THE SOFTWARE.
  *
  *******************************************************************************************************************/
-
+import java.io.File;
+import java.io.IOException;
+import java.io.FileWriter;
 
 
 /**
- *
  * @author <a href="mailto:russgold@meterware.com">Russell Gold</a>
- **/
-abstract public class MenuTarget implements SiteElement {
+ */
+public class FilePageGenerator implements PageGenerator {
 
-    private String _location;
-    String _item;
+    private File _root;
 
 
-    public String getLocation() {
-        return _location;
+    public FilePageGenerator( File root ) {
+        _root = root;
     }
 
 
-    public void setLocation( String location ) {
-        _location = location;
-    }
-
-
-    public String getItem() {
-        return _item;
-    }
-
-
-    public void setItem( String item ) {
-        _item = item;
+    public void definePageAt( String location, String pageContents ) throws IOException {
+        File file = new File( _root, location );
+        file.getParentFile().mkdir();
+        FileWriter fw = new FileWriter( file );
+        fw.write( pageContents );
+        fw.close();
     }
 
 }

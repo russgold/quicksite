@@ -55,6 +55,7 @@ public class DocumentSemantics {
         } catch (InvocationTargetException e) {
             throw new RuntimeException( "Error interpreting document: " + documentName + ": " + e.getTargetException() );
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException( "Error interpreting document: " + documentName + ": " + e );
         }
     }
@@ -106,7 +107,7 @@ public class DocumentSemantics {
             Object subElement = method.invoke( elementObject, NO_ARGS );
             interpretNode( child, subElement );
         } catch (NoSuchMethodException e) {
-            setContentsAsProperty( elementObject, beanInfo, child, toPropertyName( child.getNodeName() ) );
+            setContentsAsProperty( elementObject, beanInfo, child, child.getNodeName() );
         } catch (SecurityException e) {
             e.printStackTrace();  //To change body of catch statement use Options | File Templates.
         }

@@ -1,17 +1,8 @@
 package com.meterware.website;
-
-import org.xml.sax.SAXException;
-
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
-import java.text.ParseException;
-import java.beans.IntrospectionException;
-import java.lang.reflect.InvocationTargetException;
-
 /********************************************************************************************************************
  * $Id$
  *
- * Copyright (c) 2003, Russell Gold
+ * Copyright (c) 2003,2005, Russell Gold
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
  * documentation files (the "Software"), to deal in the Software without restriction, including without limitation
@@ -29,13 +20,14 @@ import java.lang.reflect.InvocationTargetException;
  *
  *******************************************************************************************************************/
 
+
 /**
  *
  * @author <a href="mailto:russgold@httpunit.org">Russell Gold</a>
  **/
 interface SiteElement {
 
-    void generatePage( SiteTemplate template );
+    void generate( PageGenerator generator, SiteTemplate template, Site site );
 
 
     void appendMenuItem( StringBuffer sb, SiteTemplate template, String currentLocation );

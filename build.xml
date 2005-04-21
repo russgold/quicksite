@@ -1,0 +1,142 @@
+<?xml version="1.0" ?>
+<!--  ======================================================================= -->
+<!--  quicksite build file                                                     -->
+<!--  ======================================================================= -->
+<project name="quicksite" default="jar" basedir=".">
+    <property name="name" value="quicksite" />
+    <property name="Name" value="QuickSite" />
+    <property name="version" value="0.8" />
+
+    <property name="debug" value="on" />
+    <property name="deprecation" value="off" />
+    <property name="optimize" value="off" />
+
+    <property name="src.dir" value="src" />
+    <property name="tstsrc.dir" value="test" />
+
+    <property name="docs.dir" value="doc" />
+    <property name="lib.dir" value="lib" />
+    <property name="build.dir" value="build" />
+    <property name="build.classes" value="${build.dir}/classes" />
+    <property name="test.classes" value="${build.dir}/testclasses" />
+    <property name="javadoc.dir" value="${docs.dir}/api" />
+
+    <property name="packages" value="com.meterware.xml,com.meterware.website" />
+    <property name="test.class" value="com.meterware.website.WebSiteSuite" />
+
+<!--  ===================================================================  -->
+<!--  Prepares the build directory                                         -->
+<!--  ===================================================================  -->
+    <target name="prepare">
+        <typedef resource="dependencies.properties" />
+        <tstamp />
+<!--        <setproxy proxyhost="www-proxy.us.oracle.com"/>   -->
+        <mkdir dir="${build.dir}" />
+        <dependencies pathId="base.classpath">
+            <dependency group="xerces"   version="2.2.1" artifact="xmlParserAPIs" />
+            <dependency group="xerces"   version="2.6.2" artifact="xercesImpl" />
+            <dependency group="nekohtml" version="0.9.1"/>
+        </dependencies>
+    </target>
+
+
+<!--  ===================================================================  -->
+<!--  Compiles the source code                                             -->
+<!--  ===================================================================  -->
+<target name="compile" depends="prepare">
+    <mkdir dir="${build.classes}" />
+    <javac srcdir="${src.dir}" destdir="${build.classes}"
+           debug="${debug}" deprecation="${deprecation}" optimize="${optimize}">
+        <classpath>
+            <path refid="base.classpath" />
+        </classpath>
+    </javac>
+</target>
+
+
+<!--  ===================================================================  -->
+<!--  Compiles the test code                                               -->
+<!--  ===================================================================  -->
+<target name="testcompile" depends="compile">
+    <mkdir dir="${test.classes}" />
+    <dependencies pathId="test.classpath">
+        <dependency group="httpunit" version="1.6" />
+        <dependency group="jmock"    version="1.0.1" />
+        <dependency group="junit"    version="3.8.1"/>
+    </dependencies>
+    <javac srcdir="${tstsrc.dir}" destdir="${test.classes}"
+           debug="on" deprecation="off" optimize="off">
+        <classpath>
+            <path refid="base.classpath" />
+            <path refid="test.classpath" />
+            <pathelement location="${build.classes}" />
+        </classpath>
+    </javac>
+</target>
+
+
+<!--  ===================================================================  -->
+<!--  Runs the test code                                                   -->
+<!--  ===================================================================  -->
+<target name="test" depends="testcompile">
+    <java classname="${test.class}" fork="yes" >
+         <classpath>
+             <path refid="base.classpath" />
+             <path refid="test.classpath" />
+             <pathelement location="${build.classes}" />
+             <pathelement location="${test.classes}" />
+         </classpath>
+    </java>
+</target>
+
+
+<!--  ===================================================================  -->
+<!--  Creates the jar archive                                              -->
+<!--  ===================================================================  -->
+<target name="jar" depends="compile">
+    <mkdir dir="${lib.dir}" />
+    <echo file="${build.dir}/info.txt">Manifest-Version: 1.0
+Sealed: false
+HttpUnit-Version: ${version}
+Build-Date: ${TODAY}
+Build-Time: ${TSTAMP}
+</echo>
+    <jar jarfile="${lib.dir}/${name}.jar" manifest="${build.dir}/info.txt">
+        <fileset dir="${build.classes}" includes="com/**"/>
+        <fileset dir="META-INF" includes="*.dtd"/>
+    </jar>
+</target>
+
+
+<!--  ===================================================================  -->
+<!--  Creates the API documentation                                        -->
+<!--  ===================================================================  -->
+<target name="javadocs" depends="prepare">
+    <mkdir dir="${javadoc.dir}" />
+    <javadoc packagenames="${packages}" sourcepath="${basedir}/${src.dir}"
+             destdir="${javadoc.dir}" author="true" version="true"
+             windowtitle="${Name} ${version} API" doctitle="${Name}"
+             footer="Copyright &amp;copy; 2000-2004 Russell Gold. See &lt;a target=&quot;_top&quot; href=&quot;../license.html&quot;&gt;license agreement&lt;/A&gt; for rights granted." >
+        <classpath refid="base.classpath"/>
+    </javadoc>
+</target>
+
+
+<!--  ===================================================================  -->
+<!--  Cleans up generated stuff                                            -->
+<!--  ===================================================================  -->
+<target name="clean">
+    <delete dir="${build.dir}" />
+</target>
+
+
+<!--  ===================================================================  -->
+<!--  Total cleanup                                                        -->
+<!--  ===================================================================  -->
+<target name="total-clean" depends="clean">
+    <delete file="${name}_*.zip" quiet="true" />
+    <delete dir="${docs.dir}/api" />
+    <delete dir="${docs.dir}/tutorial/*.zip" />
+</target>
+
+</project>

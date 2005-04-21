@@ -2,7 +2,7 @@ package com.meterware.website;
 /********************************************************************************************************************
  * $Id$
  *
- * Copyright (c) 2003, Russell Gold
+ * Copyright (c) 2003,2005, Russell Gold
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
  * documentation files (the "Software"), to deal in the Software without restriction, including without limitation
@@ -22,25 +22,26 @@ package com.meterware.website;
 
 /**
  *
- * @author <a href="mailto:russgold@httpunit.org">Russell Gold</a>
+ * @author <a href="mailto:russgold@meterware.com">Russell Gold</a>
  **/
 public interface SiteTemplate {
 
 
     /**
-     * Adds the standard page header to the specified string buffer.
+     * Adds the standard page header to the specified string buffer, including any
+     * common elements defined in the site configuration.
      */
-    void appendPageHeader( StringBuffer sb, WebPage webPage );
+    void appendPageHeader( StringBuffer sb, Site site, WebPage webPage );
+
 
     /**
      * Adds the standard page footer to the specified string buffer.
      */
-    void appendPageFooter( StringBuffer sb, WebPage webPage );
+    void appendPageFooter( StringBuffer sb, Site site, WebPage webPage );
 
 
     void appendMenuSpace( StringBuffer sb );
 
 
     void appendMenuItem( StringBuffer sb, String source, String title, String destination );
-
 }

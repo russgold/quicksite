@@ -2,7 +2,7 @@ package com.meterware.website;
 /********************************************************************************************************************
  * $Id$
  *
- * Copyright (c) 2003, Russell Gold
+ * Copyright (c) 2003,2005 Russell Gold
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
  * documentation files (the "Software"), to deal in the Software without restriction, including without limitation
@@ -19,17 +19,19 @@ package com.meterware.website;
  * DEALINGS IN THE SOFTWARE.
  *
  *******************************************************************************************************************/
-import org.w3c.dom.*;
-import org.xml.sax.SAXException;
-import org.xml.sax.InputSource;
+import com.meterware.xml.DocumentSemantics;
 import org.cyberneko.html.parsers.DOMParser;
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.FileInputStream;
-
-import com.meterware.xml.DocumentSemantics;
-import com.meterware.website.FragmentTemplate;
+import java.io.FileReader;
+import java.io.IOException;
 
 
 /**
@@ -46,6 +48,11 @@ public class PageFragment {
 
     static void setRoot( File root ) {
         _root = root;
+    }
+
+
+    static File getRoot() {
+        return _root;
     }
 
 
@@ -78,8 +85,53 @@ public class PageFragment {
     }
 
 
-    private String getTextFragment( File file ) {
-        return "??? some text goes here ???";
+    private String getTextFragment( File file ) throws IOException {
+        FileReader fr = new FileReader( file );
+        StringBuffer sb = new StringBuffer();
+        char[] buffer = new char[ 1024 ];
+        int size = 0;
+        while (size >= 0) {
+            appendConditionedText( sb, buffer, size );
+            size = fr.read( buffer );
+        }
+        return sb.toString();
+    }
+
+
+    private void appendConditionedText( StringBuffer sb, char[] buffer, int size ) {
+        boolean inLineBreak = false;
+        for (int i = 0; i < size; i++) {
+            char c = buffer[i];
+            if (c == '\r' || c == '\n') {
+                if (inLineBreak) continue;
+                inLineBreak = true;
+                sb.append( "\r\n<p>" );
+            } else {
+                inLineBreak = false;
+                switch (c) {
+                    case '\u2013':
+                        sb.append( "&ndash;" );
+                        break;
+                    case '\u2014':
+                        sb.append( "&mdash;" );
+                        break;
+                    case '\u2018':
+                        sb.append( "&lsquo;" );
+                        break;
+                    case '\u2019':
+                        sb.append( "&rsquo;" );
+                        break;
+                    case '\u201c':
+                        sb.append( "&ldquo;" );
+                        break;
+                    case '\u201d':
+                        sb.append( "&rdquo;" );
+                        break;
+                    default:
+                        sb.append( c );
+                }
+            }
+        }
     }
 
 
