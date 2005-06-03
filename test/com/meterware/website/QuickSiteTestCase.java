@@ -28,10 +28,7 @@ public class QuickSiteTestCase extends MockObjectTestCase {
     protected static File createTextFile( String contents ) throws IOException {
         File file = File.createTempFile( "fragment", ".txt" );
         if (_temporaryDirectory == null) _temporaryDirectory = file.getParentFile();
-        FileWriter writer = new FileWriter( file );
-        writer.write( contents );
-        writer.close();
-        return file;
+        return writeFileContents( file, contents );
     }
 
 
@@ -51,6 +48,17 @@ public class QuickSiteTestCase extends MockObjectTestCase {
 
     protected File createTextFile( File groupDir, String contents ) throws IOException {
         File file = File.createTempFile( "fragment", ".txt", groupDir );
+        return writeFileContents( file, contents );
+    }
+
+
+    protected File createTextFile( File groupDir, String fileName, String contents ) throws IOException {
+        File file = new File( groupDir, fileName );
+        return writeFileContents( file, contents );
+    }
+
+
+    private static File writeFileContents( File file, String contents ) throws IOException {
         FileWriter writer = new FileWriter( file );
         writer.write( contents );
         writer.close();

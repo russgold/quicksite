@@ -20,6 +20,7 @@ package com.meterware.website;
  *
  *******************************************************************************************************************/
 import java.io.IOException;
+import java.io.File;
 import java.util.ArrayList;
 
 
@@ -28,7 +29,7 @@ import java.util.ArrayList;
  *
  * @author <a href="mailto:russgold@meteware.com">Russell Gold</a>
  **/
-public class WebPage extends MenuTarget {
+public class WebPage extends MenuTarget implements SiteLocation {
 
     private String _title;
     private boolean _mainPage;
@@ -38,6 +39,11 @@ public class WebPage extends MenuTarget {
 
     public String getTitle() {
         return _title;
+    }
+
+
+    public String getLocation() {
+        return super.getLocation();    //To change body of overridden methods use File | Settings | File Templates.
     }
 
 
@@ -70,16 +76,23 @@ public class WebPage extends MenuTarget {
 
 
     public void generate( PageGenerator generator, SiteTemplate template, Site site ) {
+        generate( generator, template, site, null );
+    }
+
+
+    public void generate( PageGenerator generator, SiteTemplate template, Site site, String relativeRoot ) {
         try {
             StringBuffer sb = new StringBuffer();
             template.appendPageHeader( sb, site, this );
             for (int i = 0; i < _fragments.size(); i++) {
                 PageFragment pageFragment = (PageFragment) _fragments.get( i );
-                sb.append( pageFragment.asText() ).append( FragmentTemplate.LINE_BREAK );
+                sb.append( pageFragment.asText( relativeRoot ) ).append( FragmentTemplate.LINE_BREAK );
             }
             template.appendPageFooter( sb, site, this );
 
-            generator.definePageAt( getLocation(), sb.toString() );
+            String location = getLocation();
+            if (relativeRoot != null) location = relativeRoot + '/' + location;
+            generator.definePageAt( location, sb.toString() );
         } catch (IOException e) {
             throw new RuntimeException( "Error writing page '" + e );
         }
@@ -90,5 +103,9 @@ public class WebPage extends MenuTarget {
         template.appendMenuItem( sb, currentLocation, getItem(), getLocation() );
     }
 
+
+    public void setSource( String source ) {
+        createFragment().setSource( source );
+    }
 
 }

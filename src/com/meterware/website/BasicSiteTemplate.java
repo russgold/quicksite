@@ -12,7 +12,7 @@ package com.meterware.website;
  */
 public class  BasicSiteTemplate implements SiteTemplate {
 
-    public void appendPageHeader( StringBuffer sb, Site site, WebPage currentPage ) {
+    public void appendPageHeader( StringBuffer sb, Site site, SiteLocation currentPage ) {
         site.appendPageTitle( sb, currentPage );
         site.appendMenu( sb, this, currentPage.getLocation() );
         site.appendCommonElements( sb );
@@ -21,7 +21,7 @@ public class  BasicSiteTemplate implements SiteTemplate {
     }
 
 
-    public void appendPageFooter( StringBuffer sb, Site site, WebPage currentPage ) {
+    public void appendPageFooter( StringBuffer sb, Site site, SiteLocation currentPage ) {
         sb.append( "</div>" ).append( FragmentTemplate.LINE_BREAK );
         sb.append( "</body></html>" );
     }

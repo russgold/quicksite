@@ -31,17 +31,24 @@ public interface SiteTemplate {
      * Adds the standard page header to the specified string buffer, including any
      * common elements defined in the site configuration.
      */
-    void appendPageHeader( StringBuffer sb, Site site, WebPage webPage );
+    void appendPageHeader( StringBuffer sb, Site site, SiteLocation webPage );
 
 
     /**
      * Adds the standard page footer to the specified string buffer.
      */
-    void appendPageFooter( StringBuffer sb, Site site, WebPage webPage );
+    void appendPageFooter( StringBuffer sb, Site site, SiteLocation webPage );
 
 
     void appendMenuSpace( StringBuffer sb );
 
 
+    /**
+     * Appends an item to the site menu customized for the current page.
+     * @param sb           a buffer into which the menu item should be written
+     * @param source       the location of the page which will host the menu
+     * @param title        the title to be used in the menu for this item
+     * @param destination  the location of the target page
+     */
     void appendMenuItem( StringBuffer sb, String source, String title, String destination );
 }

@@ -46,7 +46,7 @@ public class PageFragment {
     private static File _root;
 
 
-    static void setRoot( File root ) {
+    public static void setRoot( File root ) {
         _root = root;
     }
 
@@ -57,9 +57,19 @@ public class PageFragment {
 
 
     public String asText() {
+        return asText( null );
+    }
+
+
+    public String asText( String relativeRoot ) {
         try {
             File file = new File( _source );
             if (!file.exists()) file = new File( _root, _source );
+            if (!file.exists() && relativeRoot != null) {
+                File parent = new File( _root, relativeRoot );
+                if (!parent.isDirectory()) parent = parent.getParentFile();
+                file = new File( parent, _source );
+            }
             if (isXmlFile( file )) {
                 return getXMLBasedFragment( file );
             } else if (isHtmlFile( file )) {
@@ -108,29 +118,37 @@ public class PageFragment {
                 sb.append( "\r\n<p>" );
             } else {
                 inLineBreak = false;
-                switch (c) {
-                    case '\u2013':
-                        sb.append( "&ndash;" );
-                        break;
-                    case '\u2014':
-                        sb.append( "&mdash;" );
-                        break;
-                    case '\u2018':
-                        sb.append( "&lsquo;" );
-                        break;
-                    case '\u2019':
-                        sb.append( "&rsquo;" );
-                        break;
-                    case '\u201c':
-                        sb.append( "&ldquo;" );
-                        break;
-                    case '\u201d':
-                        sb.append( "&rdquo;" );
-                        break;
-                    default:
-                        sb.append( c );
-                }
+                appendHtmlCharacter( sb, c );
             }
+        }
+    }
+
+
+    private void appendHtmlCharacter( StringBuffer sb, char c ) {
+        switch (c) {
+            case '\u2013':
+                sb.append( "&ndash;" );
+                break;
+            case '\u2014':
+                sb.append( "&mdash;" );
+                break;
+            case '\u2018':
+                sb.append( "&lsquo;" );
+                break;
+            case '\u2019':
+                sb.append( "&rsquo;" );
+                break;
+            case '\u201c':
+                sb.append( "&ldquo;" );
+                break;
+            case '\u201d':
+                sb.append( "&rdquo;" );
+                break;
+            case '\u2026':
+                sb.append( "&hellip;" );
+                break;
+            default:
+                sb.append( c );
         }
     }
 
@@ -154,7 +172,10 @@ public class PageFragment {
         for (int i = 0; i < childNodes.getLength(); i++) {
             Node node = childNodes.item(i);
             if (node.getNodeType() == Node.TEXT_NODE) {
-                sb.append( node.getNodeValue() );
+                char[] nodeValue = node.getNodeValue().toCharArray();
+                for (int j = 0; j < nodeValue.length; j++) {
+                    appendHtmlCharacter( sb, nodeValue[j] );
+                }
             } else if (node.getNodeType() == Node.ELEMENT_NODE) {
                 if (needsNewLine( node.getNodeName() )) sb.append( FragmentTemplate.LINE_BREAK ).append( prefix );
                 sb.append( '<' ).append( node.getNodeName() );

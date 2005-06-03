@@ -95,88 +95,84 @@ public class WebPageTest extends QuickSiteTestCase {
 
 
     /**
-     * Verify that a web directory generates a file for each source file.
-     * <directory item="Click Me" dir="group">
-     *    <element location="fragment1" title="Alpha" />
-     *    <element location="fragment2" title="Beta" />
-     *    <element location="fragment3" title="Gamma" />
-     * </directory>
+     * Verify that a web directory uses a separate index file to generate results.
+     * <category item="teams">
+     *    <directory name="crimson" dir="group/red"/>
+     * </category>
      *
-     * ?? maybe have index.txt in each directory with this info, plus <subdir> element to select more (later?)
+     * group/red/index.xml:
+     * <?xml version='1.0'?>
+     * <group-contents/>
+     *
      */
-    public void testSimpleWebDirectory() throws Exception {
+    public void testSimpleWebCategory() throws Exception {
         final File sourceDir = new File( System.getProperty( "java.io.tmpdir" ) );
-        File groupDir = new File( sourceDir, "group" );
+        File groupDir = new File( sourceDir, "group/red" );
         if (!groupDir.exists()) {
-            groupDir.mkdir();
+            groupDir.mkdirs();
         } else {
             clearDir( groupDir );
         }
 
-        GroupEntry[] entries = new GroupEntry[] { new GroupEntry( groupDir, "Alpha", "something" ),
-                                                  new GroupEntry( groupDir, "Beta", "other thing" ),
-                                                  new GroupEntry( groupDir, "Gamma", "yet another" ) };
+        createTextFile( groupDir, "index.xml", "<?xml version='1.0'?><group-contents/>" );
 
-        WebDirectory directory = new WebDirectory();
-        directory.setItem( "Click Me" );
-        directory.setDir( "group" );
-        for (int i = 0; i < entries.length; i++) {
-            GroupEntry entry = entries[i];
-            entry.addEntry( directory );
-        }
+        WebCategory category = new WebCategory();
+        category.setItem( "teams" );
+        WebCategory.Directory directory = category.createDirectory();
+        directory.setDir( "group/red" );
+        directory.setName( "crimson" );
+
         PageFragment.setRoot( sourceDir );
         Site site = new Site();
 
-        assertEquals( "Num pages defined", 3, directory.getPages().size() );
         Mock mockPageGenerator = new Mock( PageGenerator.class );
         Mock mockSiteTemplate = new Mock( SiteTemplate.class );
 
-        mockPageGenerator.expects( once() ).method( "definePageAt" ).with( eq( entries[0].getExpectedLocation() ), eq( "something" + FragmentTemplate.LINE_BREAK ) );
-        mockPageGenerator.expects( once() ).method( "definePageAt" ).with( eq( entries[1].getExpectedLocation() ), eq( "other thing" + FragmentTemplate.LINE_BREAK ) );
-        mockPageGenerator.expects( once() ).method( "definePageAt" ).with( eq( entries[2].getExpectedLocation() ), eq( "yet another" + FragmentTemplate.LINE_BREAK ) );
-        mockSiteTemplate.expects( atLeastOnce() ).method( "appendPageHeader" ).with( isA( StringBuffer.class ), same( site ), isA( WebPage.class ) );
-        mockSiteTemplate.expects( atLeastOnce() ).method( "appendPageFooter" ).with( isA( StringBuffer.class ), same( site ), isA( WebPage.class ) );
+        mockPageGenerator.expects( once() ).method( "definePageAt" ).with( eq( "group/red/contents.html" ), eq( "something" ) );
+        mockSiteTemplate.expects( once() ).method( "appendPageHeader" ).with( isA( StringBuffer.class ), same( site ), isA( SiteLocation.class ) );
+        mockSiteTemplate.expects( once() ).method( "appendPageFooter" ).with( isA( StringBuffer.class ), same( site ), isA( SiteLocation.class ) );
 
-        directory.generate( (PageGenerator) mockPageGenerator.proxy(), (SiteTemplate) mockSiteTemplate.proxy(), site );
+        DirectoryTemplate.registerTemplate( new GroupContents() );
+        category.generate( (PageGenerator) mockPageGenerator.proxy(), (SiteTemplate) mockSiteTemplate.proxy(), site );
 
         StringBuffer buffer = new StringBuffer();
-        mockSiteTemplate.expects( once() ).method( "appendMenuItem" ).with( same( buffer ), eq( "elsewhere" ), eq( "Alpha" ), eq( entries[0].getExpectedLocation() ) );
-        directory.appendMenuItem( buffer, (SiteTemplate) mockSiteTemplate.proxy(), "elsewhere" );
+        mockSiteTemplate.expects( once() ).method( "appendMenuItem" ).with( same( buffer ), eq( "elsewhere" ), eq( "teams" ), eq( "group/red/contents.html" ) );
+        category.appendMenuItem( buffer, (SiteTemplate) mockSiteTemplate.proxy(), "elsewhere" );
 
         mockPageGenerator.verify();
         mockSiteTemplate.verify();
     }
 
 
-    private String withoutExtension( String name ) {
-        if (name.indexOf( '.' ) < 0) return name;
-        return name.substring( 0, name.indexOf( '.' ) );
-    }
+    public class GroupContents extends DirectoryTemplate {
+
+        private Location _location;
 
 
-    class GroupEntry {
-        private File _fragment;
-        private String _location;
-        private String _title;
-
-
-        GroupEntry( File dir, String title, String contents ) throws IOException {
-            _title = title;
-            _fragment = createTextFile( dir, contents );
-            _location = withoutExtension( _fragment.getName() );
+        public void generate( PageGenerator generator, SiteTemplate template, Site site ) throws IOException {
+            definePage( generator, template, site, _location, "something" );
         }
 
 
-        void addEntry( WebDirectory directory ) {
-            WebDirectory.Element element = directory.createElement();
-            element.setLocation( _location );
-            element.setTitle( _title );
+        public DirectoryTemplate newFragment() {
+            return new GroupContents();
         }
 
 
-        String getExpectedLocation() {
-            return "group/" + withoutExtension( _fragment.getName() ) + ".html";
+        public String getRootNodeName() {
+            return "group-contents";
         }
+
+
+        public String getFirstLocation() {
+            return _location.getLocation();
+        }
+
+
+        public void setBase( String dir, String name ) {
+            _location = new Location( "Contents", dir, "contents.html" );
+        }
+
     }
 
 

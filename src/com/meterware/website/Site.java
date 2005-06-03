@@ -35,7 +35,7 @@ import java.util.ArrayList;
 public class Site {
 
     private ArrayList _commonElements = new ArrayList();
-    private ArrayList _pages = new ArrayList();
+    private ArrayList _siteElements = new ArrayList();
 
     private String _siteName;
     private String _logo;
@@ -47,8 +47,8 @@ public class Site {
         Document document = DocumentSemantics.parseDocument( siteFile );
         DocumentSemantics.build( document, site, siteFile.getAbsolutePath() );
 
-        for (int i = 0; i < site._pages.size(); i++) {
-            SiteElement siteElement = (SiteElement) site._pages.get( i );
+        for (int i = 0; i < site._siteElements.size(); i++) {
+            SiteElement siteElement = (SiteElement) site._siteElements.get( i );
             siteElement.generate( generator, template, site );
         }
     }
@@ -66,8 +66,13 @@ public class Site {
     }
 
 
+    public WebCategory createCategory() {
+        return (WebCategory) addedSiteElement( new WebCategory() );
+    }
+
+
     protected SiteElement addedSiteElement( SiteElement page ) {
-        _pages.add( page );
+        _siteElements.add( page );
         return page;
     }
 
@@ -113,7 +118,7 @@ public class Site {
     }
 
 
-    public void appendPageTitle( StringBuffer sb, WebPage currentPage ) {
+    public void appendPageTitle( StringBuffer sb, SiteLocation currentPage ) {
         sb.append( "<html><head><title>" ).append( getSiteName() ).append( ' ' ).append( currentPage.getTitle() ).append( "</title>" ).append( FragmentTemplate.LINE_BREAK );
         sb.append( "<link rel='stylesheet' href='" ).append( SiteUtils.relativeURL( currentPage.getLocation(), "site.css"  ) ).append( "' type='text/css'>" ).append( FragmentTemplate.LINE_BREAK );
         sb.append( "</head>" ).append( FragmentTemplate.LINE_BREAK );
@@ -193,8 +198,8 @@ public class Site {
 
     public void appendMenu( StringBuffer sb, SiteTemplate siteTemple, String currentLocation ) {
         sb.append( "<div id='Menu'>" ).append( FragmentTemplate.LINE_BREAK );
-        for (int i = 0; i < _pages.size(); i++) {
-            SiteElement siteElement = (SiteElement) _pages.get( i );
+        for (int i = 0; i < _siteElements.size(); i++) {
+            SiteElement siteElement = (SiteElement) _siteElements.get( i );
             siteElement.appendMenuItem( sb, siteTemple, currentLocation );
         }
         sb.append( "</div>" ).append( FragmentTemplate.LINE_BREAK );
