@@ -197,7 +197,7 @@ public class PageFragment {
         nodeName = nodeName.trim();
         if (nodeName.startsWith( "/")) nodeName = nodeName.substring(1).trim();
         if (nodeName.endsWith( "/")) nodeName = nodeName.substring( 0, nodeName.length()-1 ).trim();
-        return !nodeName.equalsIgnoreCase( "a" ) && !nodeName.equalsIgnoreCase( "b" );
+        return !nodeName.equalsIgnoreCase( "a" ) && !nodeName.equalsIgnoreCase( "b" ) && !nodeName.equalsIgnoreCase( "i" );
     }
 
 
