@@ -91,6 +91,7 @@ public class WebCategory extends MenuTarget {
                 } catch (SAXException e) {
                     throw new RuntimeException( "Error parsing " + indexFile + ": " + e );
                 } catch (IOException e) {
+                    e.printStackTrace();
                     throw new RuntimeException( "Error reading " + indexFile + ": " + e );
                 }
             }

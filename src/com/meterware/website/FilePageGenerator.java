@@ -39,7 +39,6 @@ public class FilePageGenerator implements PageGenerator {
 
     public void definePageAt( String location, String pageContents ) throws IOException {
         File file = new File( _root, location );
-        System.out.println( "REG-> generating " + file.getAbsolutePath() );  // TODO remove this
         file.getParentFile().mkdirs();
         FileWriter fw = new FileWriter( file );
         fw.write( pageContents );
