@@ -147,7 +147,11 @@ public class PageFragment {
             case '\u2026':
                 sb.append( "&hellip;" );
                 break;
+            case '\u00a0':
+                sb.append( "&nbsp;" );
+                break;
             default:
+                if (c > 128) System.out.println( "Found unexpected character: " + Integer.toHexString( c ) );
                 sb.append( c );
         }
     }
