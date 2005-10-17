@@ -14,7 +14,7 @@ import java.util.ArrayList;
  */
 public class SiteUtils {
 
-    static String relativeURL( String currentPage, String nextPage ) {
+    public static String relativeURL( String currentPage, String nextPage ) {
         if (nextPage.indexOf(':') >= 0) return nextPage;
         String[] currentPath = getRelativePath( currentPage );
         String[] nextPath = getRelativePath( nextPage );

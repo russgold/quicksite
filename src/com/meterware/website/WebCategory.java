@@ -35,6 +35,10 @@ public class WebCategory extends MenuTarget {
     public void generate( PageGenerator generator, SiteTemplate template, Site site ) {
         for (Iterator iterator = _directories.iterator(); iterator.hasNext();) {
             Directory directory = (Directory) iterator.next();
+            directory.getTemplate();
+        }
+        for (Iterator iterator = _directories.iterator(); iterator.hasNext();) {
+            Directory directory = (Directory) iterator.next();
             directory.generate( generator, template, site );
         }
     }
@@ -77,7 +81,7 @@ public class WebCategory extends MenuTarget {
         }
 
 
-        private DirectoryTemplate getTemplate() {
+        DirectoryTemplate getTemplate() {
             if (_template == null) {
                 File indexFile = null;
                 try {
