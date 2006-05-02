@@ -119,7 +119,7 @@ public class Site {
 
 
     public void appendPageTitle( StringBuffer sb, SiteLocation currentPage ) {
-        sb.append( "<html><head><title>" ).append( getSiteName() ).append( ' ' ).append( currentPage.getTitle() ).append( "</title>" ).append( FragmentTemplate.LINE_BREAK );
+        sb.append( "<html><head><meta http-equiv='Content-Type' content='text/html; charset=UTF-8'><title>" ).append( getSiteName() ).append( ' ' ).append( currentPage.getTitle() ).append( "</title>" ).append( FragmentTemplate.LINE_BREAK );
         sb.append( "<link rel='stylesheet' href='" ).append( SiteUtils.relativeURL( currentPage.getLocation(), "site.css"  ) ).append( "' type='text/css'>" ).append( FragmentTemplate.LINE_BREAK );
         sb.append( "</head>" ).append( FragmentTemplate.LINE_BREAK );
         sb.append( "<body>" ).append( FragmentTemplate.LINE_BREAK );
