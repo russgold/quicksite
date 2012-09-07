@@ -14,7 +14,7 @@ import java.io.IOException;
 /**
  * @author <a href="mailto:russgold@meterware.com">Russell Gold</a>
  */
-public class QuickSiteTestCase extends MockObjectTestCase {
+public class QuickSiteTestBase extends MockObjectTestCase {
 
 
     private static File _temporaryDirectory;

@@ -17,7 +17,7 @@ import java.io.IOException;
 /**
  * @author <a href="mailto:russgold@meterware.com">Russell Gold</a>
  */
-public class WebPageTest extends QuickSiteTestCase {
+public class WebPageTest extends QuickSiteTestBase {
 
     public static void main( String[] args ) {
         TestRunner.run( suite() );

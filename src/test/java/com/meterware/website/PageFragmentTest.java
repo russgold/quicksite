@@ -13,7 +13,7 @@ import java.io.File;
  *
  * @author <a href="mailto:russgold@httpunit.org">Russell Gold</a>
  **/
-public class PageFragmentTest extends QuickSiteTestCase {
+public class PageFragmentTest extends QuickSiteTestBase {
 
 
     public static void main( String[] args ) {
