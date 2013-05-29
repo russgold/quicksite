@@ -2,19 +2,16 @@ package com.meterware.website;
 /********************************************************************************************************************
  * $Id$
  *
- * Copyright (c) 2005, Russell Gold
+ * Copyright (c) 2005,2013, Russell Gold
  *
  *******************************************************************************************************************/
+import com.meterware.xml.XmlSemantics;
 import org.xml.sax.SAXException;
 import org.w3c.dom.Document;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
-
-import com.meterware.xml.DocumentSemantics;
 
 
 /**
@@ -22,7 +19,7 @@ import com.meterware.xml.DocumentSemantics;
  */
 public class WebCategory extends MenuTarget {
 
-    private ArrayList _directories = new ArrayList();
+    private ArrayList<Directory> _directories = new ArrayList<Directory>();
 
 
     public Directory createDirectory() {
@@ -33,19 +30,19 @@ public class WebCategory extends MenuTarget {
 
 
     public void generate( PageGenerator generator, SiteTemplate template, Site site ) {
-        for (Iterator iterator = _directories.iterator(); iterator.hasNext();) {
-            Directory directory = (Directory) iterator.next();
+        for (Object _directory : _directories) {
+            Directory directory = (Directory) _directory;
             directory.getTemplate();
         }
-        for (Iterator iterator = _directories.iterator(); iterator.hasNext();) {
-            Directory directory = (Directory) iterator.next();
-            directory.generate( generator, template, site );
+        for (Object _directory : _directories) {
+            Directory directory = (Directory) _directory;
+            directory.generate(generator, template, site);
         }
     }
 
 
     public void appendMenuItem( StringBuffer sb, SiteTemplate template, String currentLocation ) {
-        Directory firstDirectory = (Directory) _directories.get(0);
+        Directory firstDirectory = _directories.get(0);
         template.appendMenuItem( sb, currentLocation, getItem(), firstDirectory.getLocation() );
     }
 
@@ -88,9 +85,9 @@ public class WebCategory extends MenuTarget {
                     indexFile = new File( new File( PageFragment.getRoot(), _dir), "index.xml" );
                     if (!indexFile.exists()) throw new RuntimeException( indexFile.getAbsolutePath() + " does not exist" );
 
-                    Document document = DocumentSemantics.parseDocument( indexFile );
-                    _template = DirectoryTemplate.getTemplateFor( DocumentSemantics.getRootNode( document ).getNodeName() );
-                    DocumentSemantics.build( document, _template, indexFile.getAbsolutePath() );
+                    Document document = XmlSemantics.parseDocument( indexFile );
+                    _template = DirectoryTemplate.getTemplateFor( XmlSemantics.getRootNode( document ).getNodeName() );
+                    XmlSemantics.build( document, _template, indexFile.getAbsolutePath() );
                     _template.setBase( _dir, _name );
                 } catch (SAXException e) {
                     throw new RuntimeException( "Error parsing " + indexFile + ": " + e );

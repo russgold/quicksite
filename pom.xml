@@ -2,25 +2,55 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.httpunit</groupId>
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
+
+    <groupId>com.meterware</groupId>
     <artifactId>quicksite</artifactId>
-    <version>0.8</version>
-    <packaging>jar</packaging>
+    <version>0.8-SNAPSHOT</version>
+
     <name>QuickSite</name>
     <description>A tool to generate web sites from xml</description>
 
-    <url>http://java.net/projects/simplestub</url>
+    <developers>
+        <developer>
+            <id>russgold</id>
+            <name>Russell Gold</name>
+            <roles>
+                <role>lead</role>
+                <role>developer</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>MIT</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+        </license>
+    </licenses>
+
+    <url>http://russgold.github.io/quicksite/</url>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <distributionManagement>
+        <site>
+            <id>github</id>
+            <url>scm:git:https://github.com/russgold/quicksite.git</url>
+        </site>
+    </distributionManagement>
 
     <dependencies>
         <dependency>
-            <groupId>xerces</groupId>
-            <artifactId>xmlParserAPIs</artifactId>
-            <version>2.2.1</version>
-        </dependency>
-        <dependency>
-            <groupId>xerces</groupId>
-            <artifactId>xercesImpl</artifactId>
-            <version>2.6.2</version>
+            <groupId>com.meterware.xml</groupId>
+            <artifactId>xmlsemantics</artifactId>
+            <version>0.8.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>nekohtml</groupId>
@@ -28,9 +58,9 @@
             <version>0.9.1</version>
         </dependency>
         <dependency>
-            <groupId>httpunit</groupId>
+            <groupId>org.httpunit</groupId>
             <artifactId>httpunit</artifactId>
-            <version>1.6</version>
+            <version>1.7.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -42,7 +72,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>3.8.1</version>
+            <version>4.8.2</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -50,13 +80,8 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
-                <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
-                </configuration>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.4</version>
             </plugin>
         </plugins>
     </build>

@@ -1,8 +1,7 @@
 package com.meterware.website;
 /********************************************************************************************************************
- * $Id$
  *
- * Copyright (c) 2003,2005, Russell Gold
+ * Copyright (c) 2003,2005,2013 Russell Gold
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
  * documentation files (the "Software"), to deal in the Software without restriction, including without limitation
@@ -19,7 +18,7 @@ package com.meterware.website;
  * DEALINGS IN THE SOFTWARE.
  *
  *******************************************************************************************************************/
-import com.meterware.xml.DocumentSemantics;
+import com.meterware.xml.XmlSemantics;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -44,8 +43,8 @@ public class Site {
 
     protected static void generate( Site site, File siteFile, SiteTemplate template, PageGenerator generator ) throws SAXException, IOException {
         PageFragment.setRoot( siteFile.getParentFile() );
-        Document document = DocumentSemantics.parseDocument( siteFile );
-        DocumentSemantics.build( document, site, siteFile.getAbsolutePath() );
+        Document document = XmlSemantics.parseDocument( siteFile );
+        XmlSemantics.build( document, site, siteFile.getAbsolutePath() );
 
         for (int i = 0; i < site._siteElements.size(); i++) {
             SiteElement siteElement = (SiteElement) site._siteElements.get( i );

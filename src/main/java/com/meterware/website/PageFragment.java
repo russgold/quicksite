@@ -1,8 +1,7 @@
 package com.meterware.website;
 /********************************************************************************************************************
- * $Id$
  *
- * Copyright (c) 2003,2005 Russell Gold
+ * Copyright (c) 2003,2005, 2013 Russell Gold
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
  * documentation files (the "Software"), to deal in the Software without restriction, including without limitation
@@ -19,7 +18,7 @@ package com.meterware.website;
  * DEALINGS IN THE SOFTWARE.
  *
  *******************************************************************************************************************/
-import com.meterware.xml.DocumentSemantics;
+import com.meterware.xml.XmlSemantics;
 import org.cyberneko.html.parsers.DOMParser;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -206,10 +205,10 @@ public class PageFragment {
 
 
     private String getXMLBasedFragment( File file ) throws SAXException, IOException {
-        Document document = DocumentSemantics.parseDocument( file );
-        FragmentTemplate template = FragmentTemplate.getTemplateFor( DocumentSemantics.getRootNode( document ).getNodeName() );
-        DocumentSemantics.build( document, template, file.getAbsolutePath() );
-        return _extract == null ? template.asText() : DocumentSemantics.getStringProperty( _extract, template );
+        Document document = XmlSemantics.parseDocument( file );
+        FragmentTemplate template = FragmentTemplate.getTemplateFor( XmlSemantics.getRootNode( document ).getNodeName() );
+        XmlSemantics.build(document, template, file.getAbsolutePath());
+        return _extract == null ? template.asText() : XmlSemantics.getStringProperty( _extract, template );
     }
 
 
